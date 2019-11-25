@@ -1,0 +1,21 @@
+POP to D:
+@SP
+A=M-1
+???D=M
+@SP
+M=M-1
+
+Push:
+@SP
+A=M
+M=val
+@SP
+M=M+1
+
+ADD:
+pop
+pop
+plus
+push
+
+

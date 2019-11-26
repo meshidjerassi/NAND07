@@ -66,14 +66,3 @@ def lineHandler(line):
     return
 
 
-def main(argv):
-    file = parser(argv[1])
-    i = 0
-    for line in file:
-        print(line + " " + str(i))
-        i += 1
-    return 0
-
-
-if __name__ == "__main__":
-    main(argv)

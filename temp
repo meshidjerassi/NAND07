@@ -1,21 +1,26 @@
-POP to D:
+POP to DEST:
 @SP
 A=M-1
-???D=M
-@SP
+D=M
+@SP //do i need this?
 M=M-1
+@DEST
+M=D
 
 Push:
+@VAL
+D=M
 @SP
 A=M
-M=val
+M=D
 @SP
 M=M+1
 
 ADD:
-pop
-pop
-plus
-push
-
-
+@SP
+A=M-1
+D=M
+@SP //do i need this?
+M=M-1
+A=M-1
+M=D+M

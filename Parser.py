@@ -1,15 +1,23 @@
 import glob
 import os
+from sys import argv
+
 import global_consts as gb
 
 parsed_lines = []
 
 
 def parser(path):
+    """
+
+    :param path:
+    :return: an array of cleaned lines from all required files
+    """
     if os.path.isfile(path):
         fileReader(path)
     elif os.path.isdir(path):
         dirHandler(path)
+    return parsed_lines
 
 
 def fileReader(file):
@@ -42,8 +50,8 @@ def dirHandler(dir):
 
 def lineHandler(line):
     """
-    receives a string, removes all white spaces + allocates memory space to symbols
-    :param line: a string of a line from the given asm file
+    receives a string, removes all white spaces
+    :param line: a string of a line from the given vm file
     :return: void
     """
     line = line.strip(gb.NEW_LINE)
@@ -52,13 +60,20 @@ def lineHandler(line):
         if line[i] + line[i + 1] == gb.COMMENT:
             line = line[:i]
             break
-    line = line.replace(" ", "")
     if len(line) == 0:
         return
-
-    if line[0] == gb.START and line[len(line) - 1] == gb.END:
-        line = line[1:len(line) - 1]
-        gb.symbol_dict[line] = len(gb.CLEAN_LINES)  # Symbols memory allocation
-        return
-    gb.CLEAN_LINES.append(line)
+    parsed_lines.append(line)
     return
+
+
+def main(argv):
+    file = parser(argv[1])
+    i = 0
+    for line in file:
+        print(line + " " + str(i))
+        i += 1
+    return 0
+
+
+if __name__ == "__main__":
+    main(argv)

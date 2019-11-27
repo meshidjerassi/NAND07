@@ -1,15 +1,101 @@
-POP to DEST:
+POP to LCL/ARG/THIS/THAT:
 @SP
 A=M-1
 D=M
-@SP //do i need this?
+@R13
+M=D
+@SP
 M=M-1
-@DEST
+@LCL/ARG/THIS/THAT
+D=M
+
+@i
+D=A+D
+@R14
 M=D
 
-Push:
-@VAL
+@R13
 D=M
+@R14
+A=M
+M=D
+
+POP to pointer/temp:
+@SP
+A=M-1
+D=M
+@R13
+M=D
+@SP
+M=M-1
+@3/5
+D=A
+
+@i
+D=A+D
+@R14
+M=D
+
+@R13
+D=M
+@R14
+A=M
+M=D
+
+POP to static:
+@SP
+A=M-1
+D=M
+@R13
+M=D
+@SP
+M=M-1
+@f.i
+D=A
+@R14
+M=D
+@R13
+D=M
+@R14
+A=M
+M=D
+
+Push from LCL/ARG/THIS/THAT:
+@LCL/ARG/THIS/THAT
+D=M
+@i
+A=A+D
+D=M
+@SP
+A=M
+M=D
+@SP
+M=M+1
+
+PUSH from ptr/temp:
+@3/5
+D=A
+@i
+A=A+D
+D=M
+@SP
+A=M
+M=D
+@SP
+M=M+1
+
+PUSH from static:
+@f.i
+D=M
+@SP
+A=M
+M=D
+@SP
+M=M+1
+
+PUSH const:
+@i
+D=A
 @SP
 A=M
 M=D

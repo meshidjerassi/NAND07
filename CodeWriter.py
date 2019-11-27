@@ -24,15 +24,29 @@ STATIC_PUSH_STR = "@{}.{}\n"
 
 
 class CodeWriter:
+    """
+    Translates VM code to ASM, and writes translation to output file
+    """
 
     def __init__(self, output):
-        self.ostream = open(output, 'w')
+        """
+        :param output: name of output file ("*.asm")
+        """
+        self.output = open(output, 'w')
         self.file_name = None
 
     def setFileName(self, name):
+        """
+        :param name: name of current .vm file to be translated, used when switching between files in dir.
+            file_name is used when pushing/popping static vars
+        """
         self.file_name = name
 
     def writeArithmetic(self, cmd):
+        """
+        writes arithmetic command to output
+        :param cmd: vm command
+        """
         res = STCK_ACCESS_STR
         if cmd in BIN_MATH_OPS:
             res += BIN_MATH_STR + BIN_MATH_OPS[cmd] + "\n"
@@ -40,9 +54,15 @@ class CodeWriter:
             res += UNI_MATH_STR.format(UNI_MATH_OPS[cmd])
         else:
             res += LOGIC_STR.format(*LOGIC_OPS[cmd])
-        self.ostream.write(res)
+        self.output.write(res)
 
     def writePushPop(self, cmd, seg, i):
+        """
+        writes push/pop command to output
+        :param cmd: type of command - "push"/"pop"
+        :param seg: memory segment to work on
+        :param i: location within segment/constant value
+        """
         if cmd == "POP":
             res = POP_STR_1
             if seg in HEAP or seg in CONST_RAM:
@@ -73,7 +93,10 @@ class CodeWriter:
                 res = "@" + i
                 dest2 = "A"
             res += PUSH_STR.format(dest2)
-        self.ostream.write(res)
+        self.output.write(res)
 
     def close(self):
-        self.ostream.close()
+        """
+        close output file after writing
+        """
+        self.output.close()

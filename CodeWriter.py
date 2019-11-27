@@ -25,8 +25,12 @@ STATIC_PUSH_STR = "@{}.{}\n"
 
 class CodeWriter:
 
-    def __init__(self, file_name):
-        self.file_name = file_name
+    def __init__(self, ostream):
+        self.ostream = ostream
+        self.file_name = None
+
+    def setFileName(self, name):
+        self.file_name = name
 
     def writeArithmetic(self, cmd):
         res = STCK_ACCESS_STR

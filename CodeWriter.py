@@ -10,12 +10,12 @@ LOGIC_STR = "D=M\n@R13//y\nM=D\n@SP\nM=M-1\nA=M-1\nD=M\n@R14//x\nM=D\n\n" \
             "(COMPARE)\n@R14\nD=M\n@R13\nD=D-M\n@TRUE\nD;J{2}\n@FALSE\n0;JMP\n\n" \
             "(FALSE)\n@SP\nA=M-1\nM=0\n@END\n0;JMP\n(TRUE)\n@SP\nA=M-1\nM=-1\n(END)\n"
 
+HEAP = {"local": "LCL", "argument": "ARG", "this": "THIS", "that": "THAT"}
+CONST_RAM = {"pointer": 3, "temp": 5}
+
 POP_STR_1 = STCK_ACCESS_STR + "D=M\n@R13\nM=D\n@SP\nM=M-1\n"
 POP_STR_2 = "@R14\nM=D\n@R13\nD=M\n@R14\nA=M\nM=D"
-
-HEAP = {"local": "LCL", "argument": "ARG", "this": "THIS", "that": "THAT"}
 HEAP_CRAM_POP_STR = "@{}\nD={}\n@{}\nD=A+D\n"
-CONST_RAM = {"pointer": 3, "temp": 5}
 STATIC_POP_STR = "@{}.{}\nD=A"
 
 PUSH_STR = "D={}\n@SP\nA=M\nM=D\n@SP\nM=M+1"
@@ -25,8 +25,8 @@ STATIC_PUSH_STR = "@{}.{}\n"
 
 class CodeWriter:
 
-    def __init__(self, ostream):
-        self.ostream = ostream
+    def __init__(self, output):
+        self.ostream = open(output, 'w')
         self.file_name = None
 
     def setFileName(self, name):
@@ -40,7 +40,7 @@ class CodeWriter:
             res += UNI_MATH_STR.format(UNI_MATH_OPS[cmd])
         else:
             res += LOGIC_STR.format(*LOGIC_OPS[cmd])
-        return res
+        self.ostream.write(res)
 
     def writePushPop(self, cmd, seg, i):
         if cmd == "POP":
@@ -73,4 +73,7 @@ class CodeWriter:
                 res = "@" + i
                 dest2 = "A"
             res += PUSH_STR.format(dest2)
-        return res
+        self.ostream.write(res)
+
+    def close(self):
+        self.ostream.close()

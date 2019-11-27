@@ -1,7 +1,9 @@
 STCK_ACCESS_STR = "@SP\nA=M-1\n"
+
 BIN_MATH_OPS = {"and": "M=D&M", "or": "M=D|M", "add": "M=D+M", "sub": "D=-D\nM=D+M"}
 UNI_MATH_OPS = {"not": "!", "neg": "-"}
 LOGIC_OPS = {"eq": ("FALSE", "FALSE", "EQ"), "lt": ("FALSE", "TRUE", "LT"), "gt": ("TRUE", "FALSE", "GT")}
+
 BIN_MATH_STR = "D=M\n@SP\nM=M-1\nA=M-1\n"
 UNI_MATH_STR = "M = {}M\n"
 LOGIC_STR = "D=M\n@R13//y\nM=D\n@SP\nM=M-1\nA=M-1\nD=M\n@R14//x\nM=D\n\n" \
@@ -41,7 +43,7 @@ class CodeWriter:
             file_name is used when pushing/popping static vars
         """
         self.file_name = name
-        self.output.write("//translating {}.vm".format(name)+"\n")
+        self.output.write("//translating {}.vm".format(name) + "\n")
 
     def writeArithmetic(self, cmd):
         """
@@ -64,36 +66,24 @@ class CodeWriter:
         :param seg: memory segment to work on
         :param i: location within segment/constant value
         """
-        res = "//" + " ".join((cmd, seg, i))+"\n"
-        if cmd == "pop":
-            res += POP_STR_1
-            if seg in HEAP or seg in CONST_RAM:
-                if seg in HEAP:
-                    seg_str = HEAP[seg]
-                    dest = "M"
-                else:
-                    seg_str = CONST_RAM[seg]
-                    dest = "A"
-                res += HEAP_CRAM_POP_STR.format(seg_str, dest, i)
+        res = "//" + " ".join((cmd, seg, str(i))) + "\n"
+        res += POP_STR_1 if cmd == "POP" else ""
+        if seg in HEAP or seg in CONST_RAM:
+            if seg in HEAP:
+                seg_str = HEAP[seg]
+                dest = "M"
             else:
-                res += STATIC_POP_STR.format(self.file_name, i)
+                seg_str = CONST_RAM[seg]
+                dest = "A"
+            res += (HEAP_CRAM_POP_STR if cmd == "pop" else HEAP_CRAM_PUSH_STR).format(seg_str, dest, i)
+        elif cmd == "pop":
+            res += STATIC_POP_STR.format(self.file_name, i)
+        else:
+            res += STATIC_PUSH_STR.format(self.file_name, i) if seg == "static" else "@{}\n".format(i)
+        if cmd == "pop":
             res += POP_STR_2
         else:
-            if seg in HEAP or seg in CONST_RAM:
-                if seg in HEAP:
-                    seg_str = HEAP[seg]
-                    dest = "M"
-                else:
-                    seg_str = CONST_RAM[seg]
-                    dest = "A"
-                res += HEAP_CRAM_PUSH_STR.format(seg_str, dest, i)
-                dest2 = "M"
-            elif seg == "static":
-                res += STATIC_PUSH_STR.format(self.file_name, i)
-                dest2 = "M"
-            else:
-                res = "@" + i
-                dest2 = "A"
+            dest2 = "M" if seg == "static" else "A"
             res += PUSH_STR.format(dest2)
         self.output.write(res)
 

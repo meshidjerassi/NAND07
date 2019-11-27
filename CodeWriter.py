@@ -41,13 +41,14 @@ class CodeWriter:
             file_name is used when pushing/popping static vars
         """
         self.file_name = name
+        self.output.write("//translating {}.vm".format(name)+"\n")
 
     def writeArithmetic(self, cmd):
         """
         writes arithmetic command to output
         :param cmd: vm command
         """
-        res = STCK_ACCESS_STR
+        res = "//{}:\n".format(cmd) + STCK_ACCESS_STR
         if cmd in BIN_MATH_OPS:
             res += BIN_MATH_STR + BIN_MATH_OPS[cmd] + "\n"
         elif cmd in UNI_MATH_OPS:
@@ -63,8 +64,9 @@ class CodeWriter:
         :param seg: memory segment to work on
         :param i: location within segment/constant value
         """
+        res = "//" + " ".join((cmd, seg, i))+"\n"
         if cmd == "pop":
-            res = POP_STR_1
+            res += POP_STR_1
             if seg in HEAP or seg in CONST_RAM:
                 if seg in HEAP:
                     seg_str = HEAP[seg]
@@ -84,10 +86,10 @@ class CodeWriter:
                 else:
                     seg_str = CONST_RAM[seg]
                     dest = "A"
-                res = HEAP_CRAM_PUSH_STR.format(seg_str, dest, i)
+                res += HEAP_CRAM_PUSH_STR.format(seg_str, dest, i)
                 dest2 = "M"
             elif seg == "static":
-                res = STATIC_PUSH_STR.format(self.file_name, i)
+                res += STATIC_PUSH_STR.format(self.file_name, i)
                 dest2 = "M"
             else:
                 res = "@" + i

@@ -1,4 +1,4 @@
-OPEN_STR = "@SP\nA=M-1\n"
+STCK_ACCESS_STR = "@SP\nA=M-1\n"
 BIN_MATH_OPS = {"and": "M=D&M", "or": "M=D|M", "add": "M=D+M", "sub": "D=-D\nM=D+M"}
 UNI_MATH_OPS = {"not": "!", "neg": "-"}
 LOGIC_OPS = {"eq": ("FALSE", "FALSE", "EQ"), "lt": ("FALSE", "TRUE", "LT"), "gt": ("TRUE", "FALSE", "GT")}
@@ -10,7 +10,7 @@ LOGIC_STR = "D=M\n@R13//y\nM=D\n@SP\nM=M-1\nA=M-1\nD=M\n@R14//x\nM=D\n\n" \
             "(COMPARE)\n@R14\nD=M\n@R13\nD=D-M\n@TRUE\nD;J{2}\n@FALSE\n0;JMP\n\n" \
             "(FALSE)\n@SP\nA=M-1\nM=0\n@END\n0;JMP\n(TRUE)\n@SP\nA=M-1\nM=-1\n(END)\n"
 
-POP_STR_1 = OPEN_STR + "D=M\n@R13\nM=D\n@SP\nM=M-1\n"
+POP_STR_1 = STCK_ACCESS_STR + "D=M\n@R13\nM=D\n@SP\nM=M-1\n"
 POP_STR_2 = "@R14\nM=D\n@R13\nD=M\n@R14\nA=M\nM=D"
 
 HEAP = {"local": "LCL", "argument": "ARG", "this": "THIS", "that": "THAT"}
@@ -29,7 +29,7 @@ class CodeWriter:
         self.file_name = file_name
 
     def writeArithmetic(self, cmd):
-        res = OPEN_STR
+        res = STCK_ACCESS_STR
         if cmd in BIN_MATH_OPS:
             res += BIN_MATH_STR + BIN_MATH_OPS[cmd] + "\n"
         elif cmd in UNI_MATH_OPS:

@@ -63,7 +63,7 @@ class CodeWriter:
         :param seg: memory segment to work on
         :param i: location within segment/constant value
         """
-        if cmd == "POP":
+        if cmd == "pop":
             res = POP_STR_1
             if seg in HEAP or seg in CONST_RAM:
                 if seg in HEAP:

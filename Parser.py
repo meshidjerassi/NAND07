@@ -1,6 +1,5 @@
 import glob
 import os
-from sys import argv
 
 import global_consts as gb
 

@@ -1,22 +1,23 @@
 import re
 from sys import argv
-import Parser as ps
+import ParserClass as ps
 import global_consts as gc
+import CodeWriter as cw
 
 
 def assembler(path):
-    unpacked_file = ps.parser(path)
-    for line in unpacked_file:
-        for seg_opp in gc.seg_opp:
-            if seg_opp in line:
+    parser = ps.ParserClass(path)
+    codeWriter = cw.CodeWriter(path)
+    for line in parser.parsed_lines:
+        for cmd in gc.cmd:
+            if cmd in line:
                 for seg in gc.seg:
                     if seg in line:
                         int = re.findall("\d+", line)[0]
-                        print(seg_opp + " " + seg + " " + str(int)) #TODO send seg + int to decoder seg method
+                        codeWriter.writePushPop(cmd, seg, int)
         for opp in gc.opp:
             if opp in line:
-                print(opp) #TODO send opp to decoder opp method
-    print("bye")
+                codeWriter.writeArithmetic(opp)
 
 
 def main(argv):

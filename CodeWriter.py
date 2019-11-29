@@ -59,7 +59,7 @@ class CodeWriter:
         else:
             res += LOGIC_STR.format(*LOGIC_OPS[cmd]).replace("#", str(self.counter))
             self.counter = self.counter + 1
-        self.output.write(res)
+        self.output.write(res+"\n")
 
     def writePushPop(self, cmd, seg, i):
         """
@@ -87,7 +87,7 @@ class CodeWriter:
         else:
             dest2 = "M" if seg == "static" else "A"
             res += PUSH_STR.format(dest2)
-        self.output.write(res)
+        self.output.write(res+"\n")
 
     def close(self):
         """

@@ -1,7 +1,7 @@
 import glob
 import os
 from sys import argv
-import ParserClass as ps
+import parser as ps
 import CodeWriter as cw
 
 
@@ -19,22 +19,26 @@ def findLastIndex(str):
 
 
 
-def main(argv):
+def main(path):
     """
     Creates parser object and code writer object, transfers the relevant commands to the relevant methods.
     :param argv: file path
     :return: void
     """
-    file_name = extension_cut(argv[1])
+    file_name = extension_cut(path)
     code_writer = cw.CodeWriter(file_name+".asm")
-    if os.path.isdir(argv[1]):
-        directory = glob.iglob(os.path.join(argv[1], "*.vm"))
+    directory = []
+    if os.path.isdir(path):
+        directory = glob.iglob(os.path.join(path, "*.vm"))
     else:
-        directory = [file_name]
+        directory.append(path)
     for file in directory:
+        # removing the file extension and send it to the setFileName
         f = extension_cut(file)
         code_writer.setFileName(f)
+        # creating a relevant parser object
         parser = ps.ParserClass(file)
+        print(len(parser.parsed_lines))
         while parser.hasMoreCommands():
             cmd = parser.commandType()
             if cmd == "C_PUSH":
@@ -42,7 +46,7 @@ def main(argv):
             if cmd == "C_POP":
                 code_writer.writePushPop("pop", parser.arg1(), parser.arg2())
             if cmd == "C_ARITHMETIC":
-                code_writer.writeArithmetic(parser.arg1)
+                code_writer.writeArithmetic(parser.arg1())
             parser.advance()
         code_writer.close()
     return

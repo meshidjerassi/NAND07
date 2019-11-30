@@ -27,8 +27,6 @@ class ParserClass:
         """
         if os.path.isfile(self.path):
             self.fileReader(self.path)
-        elif os.path.isdir(self.path):
-            self.dirHandler()
 
     def fileReader(self, file):
         """

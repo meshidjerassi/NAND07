@@ -85,7 +85,7 @@ class CodeWriter:
         if cmd == "pop":
             res += POP_STR_2
         else:
-            dest2 = "M" if seg == "static" else "A"
+            dest2 = "A" if seg == "constant" else "M"
             res += PUSH_STR.format(dest2)
         self.output.write(res+"\n")
 

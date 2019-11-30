@@ -11,11 +11,13 @@ def extension_cut(file_name):
     :param file_name: file path
     :return: the file path with out it's extension
     """
-    index = findLastIndex(file_name)
+    index = findLastIndex(file_name, '.')
+    if index == -1:
+        return file_name
     return file_name[:index]
 
 
-def findLastIndex(str):
+def findLastIndex(str, char):
     """
     finds last index of a dot '.' char in order to remove file path extension
     :param str: file path
@@ -23,9 +25,20 @@ def findLastIndex(str):
     """
     index = -1
     for i in range(0, len(str)):
-        if str[i] == '.':
+        if str[i] == char:
             index = i
     return index
+
+
+def extract_file_name(file):
+    """
+
+    :param file:
+    :return:
+    """
+    start = findLastIndex(file, '\\')
+    f = extension_cut(file[start+1:])
+    return f
 
 
 def main(path):
@@ -44,7 +57,7 @@ def main(path):
         directory.append(path)
     for file in directory:
         # removing the file extension and send it to the setFileName
-        f = extension_cut(file)
+        f = extract_file_name(file)
         code_writer.setFileName(f)
         # creating a relevant parser object
         parser = ps.Parser(file)

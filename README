@@ -1,0 +1,21 @@
+meshi.djerassi, shirmo
+===============================================================================
+Meshi Djerassi, ID 315838151, meshi.djerassi@mail.huji.ac.il
+Shir Molina, ID 312535941, shir.molina@mail.huji.ac.il
+===============================================================================
+
+                           Project 7 - VMTranslator
+                           ----------------------- 
+  
+
+Submitted Files
+---------------
+README - This file.
+VMTranslator.py (main)
+Parser.py
+CodeWriter.py
+GlobalConsys.py
+
+Remarks
+-------
+Our design uses object oriented programing in order to parse and translate multiple files from VM into ASM files.

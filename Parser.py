@@ -43,17 +43,6 @@ class Parser:
                 cnt += 1
             fp.close()
 
-    def dirHandler(self):
-        """
-
-        :param dir:
-        :return:
-        """
-        files = glob.iglob(os.path.join(self.path, "*.vm"))
-        for f in files:
-            self.fileReader(f)
-        return
-
     def lineHandler(self, line):
         """
         receives a string, removes all white spaces

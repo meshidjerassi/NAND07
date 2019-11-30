@@ -31,15 +31,16 @@ def findLastIndex(str):
 def main(path):
     """
     Creates parser object and code writer object, transfers the relevant commands to the relevant methods.
-    :param argv: file path
+    :param path: file path
     :return: void
     """
-    file_name = extension_cut(path)
-    code_writer = cw.CodeWriter(file_name + ".asm")
     directory = []
     if os.path.isdir(path):
+        code_writer = cw.CodeWriter(path + ".asm")
         directory = glob.iglob(os.path.join(path, "*.vm"))
     else:
+        file_name = extension_cut(path)
+        code_writer = cw.CodeWriter(file_name + ".asm")
         directory.append(path)
     for file in directory:
         # removing the file extension and send it to the setFileName
@@ -47,7 +48,6 @@ def main(path):
         code_writer.setFileName(f)
         # creating a relevant parser object
         parser = ps.Parser(file)
-        print(len(parser.parsed_lines))
         while parser.hasMoreCommands():
             cmd = parser.commandType()
             if cmd == "C_PUSH":

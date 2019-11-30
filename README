@@ -11,10 +11,12 @@ Shir Molina, ID 312535941, shir.molina@mail.huji.ac.il
 Submitted Files
 ---------------
 README - This file.
-VMTranslator.py (main)
+VMtranslator.py (main)
 Parser.py
 CodeWriter.py
 GlobalConsys.py
+Makefile
+VMtranslator (exe)
 
 Remarks
 -------

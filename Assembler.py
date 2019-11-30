@@ -6,6 +6,7 @@ import CodeWriter as cw
 def main(argv):
     parser = ps.ParserClass(argv[1])
     code_writer = cw.CodeWriter(argv[1])
+    code_writer.setFileName(code_writer.file_name)
     while parser.hasMoreCommands():
         cmd = parser.commandType()
         if cmd == "C_PUSH":
@@ -15,6 +16,7 @@ def main(argv):
         if cmd == "C_ARITHMETIC":
             code_writer.writeArithmetic(parser.arg1)
         parser.advance()
+    code_writer.close()
 
 
 if __name__ == "__main__":

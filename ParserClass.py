@@ -89,7 +89,16 @@ class ParserClass:
         self.line += 1
 
     def commandType(self):
-
+        line = self.parsed_lines[self.line]
+        for opp in gc.opp:
+            if opp in line:
+                return "C_ARITHMETIC"
+        for cmd in gc.cmd:
+            if cmd in line:
+                if cmd == gc.cmd[0]:
+                    return "C_PUSH"
+                else:
+                    return "C_POP"
         return
 
     def arg1(self):

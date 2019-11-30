@@ -7,12 +7,12 @@ import global_consts as gc
 
 class ParserClass:
     """
-
+    Handle one or multiple VM files, parses then and splits them into lines to send to the codeWriter obj
     """
 
     def __init__(self, file):
         """
-
+        constructor, creates an array of parsed lines from the given path
         :param file:
         """
         self.path = file
@@ -22,7 +22,7 @@ class ParserClass:
 
     def parser(self):
         """
-
+        calls the relevant method according to path type
         :return: an array of cleaned lines from all required files
         """
         if os.path.isfile(self.path):
@@ -102,6 +102,10 @@ class ParserClass:
         return
 
     def arg1(self):
+        """
+        Split the current line and returns the relevant arg
+        :return: cmd
+        """
         line = self.parsed_lines[self.line]
         for cmd in gc.cmd:
             if cmd in line:
@@ -115,8 +119,8 @@ class ParserClass:
 
     def arg2(self):
         """
-        Checks if it's a
-        :return:
+        Split the current line and returns the relevant arg
+        :return: int
         """
         line = self.parsed_lines[self.line]
         for cmd in gc.cmd:

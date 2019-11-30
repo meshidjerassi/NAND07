@@ -7,10 +7,10 @@ LOGIC_OPS = {"eq": ("FALSE", "FALSE", "EQ"), "lt": ("FALSE", "TRUE", "LT"), "gt"
 BIN_MATH_STR = "D=M\n@SP\nM=M-1\nA=M-1\n"
 UNI_MATH_STR = "M = {}M\n"
 LOGIC_STR = "D=M\n@R13//y\nM=D\n@SP\nM=M-1\nA=M-1\nD=M\n@R14//x\nM=D\n\n" \
-            "@NEG_X\nD;JLT\n@R13\nD=M\n@{0}\nD;JLT\n@COMPARE\n0;JMP\n\n" \
-            "(NEG_X)\n@R13\nD=M\n@{1}\nD;JGT\n@COMPARE\n0;JMP\n\n" \
-            "(COMPARE)\n@R14\nD=M\n@R13\nD=D-M\n@TRUE\nD;J{2}\n@FALSE\n0;JMP\n\n" \
-            "(FALSE)\n@SP\nA=M-1\nM=0\n@END\n0;JMP\n(TRUE)\n@SP\nA=M-1\nM=-1\n(END)\n"
+            "@NEG_X#\nD;JLT\n@R13\nD=M\n@{0}#\nD;JLT\n@COMPARE#\n0;JMP\n\n" \
+            "(NEG_X#)\n@R13\nD=M\n@{1}#\nD;JGT\n@COMPARE#\n0;JMP\n\n" \
+            "(COMPARE#)\n@R14\nD=M\n@R13\nD=D-M\n@TRUE#\nD;J{2}\n@FALSE#\n0;JMP\n\n" \
+            "(FALSE#)\n@SP\nA=M-1\nM=0\n@END#\n0;JMP\n(TRUE#)\n@SP\nA=M-1\nM=-1\n(END#)\n"
 
 HEAP = {"local": "LCL", "argument": "ARG", "this": "THIS", "that": "THAT"}
 CONST_RAM = {"pointer": 3, "temp": 5}
@@ -36,6 +36,7 @@ class CodeWriter:
         """
         self.output = open(output, 'w')
         self.file_name = None
+        self.counter = 0
 
     def setFileName(self, name):
         """
@@ -56,8 +57,9 @@ class CodeWriter:
         elif cmd in UNI_MATH_OPS:
             res += UNI_MATH_STR.format(UNI_MATH_OPS[cmd])
         else:
-            res += LOGIC_STR.format(*LOGIC_OPS[cmd])
-        self.output.write(res)
+            res += LOGIC_STR.format(*LOGIC_OPS[cmd]).replace("#", str(self.counter))
+            self.counter = self.counter + 1
+        self.output.write(res+"\n")
 
     def writePushPop(self, cmd, seg, i):
         """
@@ -67,7 +69,7 @@ class CodeWriter:
         :param i: location within segment/constant value
         """
         res = "//" + " ".join((cmd, seg, str(i))) + "\n"
-        res += POP_STR_1 if cmd == "POP" else ""
+        res += POP_STR_1 if cmd == "pop" else ""
         if seg in HEAP or seg in CONST_RAM:
             if seg in HEAP:
                 seg_str = HEAP[seg]
@@ -85,7 +87,7 @@ class CodeWriter:
         else:
             dest2 = "M" if seg == "static" else "A"
             res += PUSH_STR.format(dest2)
-        self.output.write(res)
+        self.output.write(res+"\n")
 
     def close(self):
         """

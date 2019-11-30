@@ -1,22 +1,31 @@
 import glob
 import os
 from sys import argv
-import parser as ps
+import Parser as ps
 import CodeWriter as cw
 
 
 def extension_cut(file_name):
+    """
+    removes the file extension
+    :param file_name: file path
+    :return: the file path with out it's extension
+    """
     index = findLastIndex(file_name)
     return file_name[:index]
 
 
 def findLastIndex(str):
+    """
+    finds last index of a dot '.' char in order to remove file path extension
+    :param str: file path
+    :return: the index of the last instance of a dot char
+    """
     index = -1
     for i in range(0, len(str)):
         if str[i] == '.':
             index = i
     return index
-
 
 
 def main(path):
@@ -26,7 +35,7 @@ def main(path):
     :return: void
     """
     file_name = extension_cut(path)
-    code_writer = cw.CodeWriter(file_name+".asm")
+    code_writer = cw.CodeWriter(file_name + ".asm")
     directory = []
     if os.path.isdir(path):
         directory = glob.iglob(os.path.join(path, "*.vm"))
@@ -37,7 +46,7 @@ def main(path):
         f = extension_cut(file)
         code_writer.setFileName(f)
         # creating a relevant parser object
-        parser = ps.ParserClass(file)
+        parser = ps.Parser(file)
         print(len(parser.parsed_lines))
         while parser.hasMoreCommands():
             cmd = parser.commandType()

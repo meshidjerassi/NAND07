@@ -5,7 +5,7 @@ import re
 import global_consts as gc
 
 
-class ParserClass:
+class Parser:
     """
     Handle one or multiple VM files, parses then and splits them into lines to send to the codeWriter obj
     """

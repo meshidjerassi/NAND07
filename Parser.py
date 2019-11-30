@@ -1,8 +1,6 @@
-import glob
-import os
 import re
 
-import global_consts as gc
+import GlobalConsts as gc
 
 
 class Parser:
@@ -10,38 +8,18 @@ class Parser:
     Handle one or multiple VM files, parses then and splits them into lines to send to the codeWriter obj
     """
 
-    def __init__(self, file):
+    def __init__(self, path):
         """
         constructor, creates an array of parsed lines from the given path
         :param file:
         """
-        self.path = file
         self.parsed_lines = []
-        self.parser()
-        self.line = 0
-
-    def parser(self):
-        """
-        calls the relevant method according to path type
-        :return: an array of cleaned lines from all required files
-        """
-        if os.path.isfile(self.path):
-            self.fileReader(self.path)
-
-    def fileReader(self, file):
-        """
-        Opens the given file, reads line after line and sends it to lineHandler method
-        :param file: the path of the given file from argv[1]
-        :return: void
-        """
-        with open(file) as fp:
+        self.cur_line = 0
+        with open(path) as fp:
             line = fp.readline()
-            cnt = 1
             while line:
                 self.lineHandler(line)
                 line = fp.readline()
-                cnt += 1
-            fp.close()
 
     def lineHandler(self, line):
         """
@@ -55,65 +33,50 @@ class Parser:
             if line[i] + line[i + 1] == gc.COMMENT:
                 line = line[:i]
                 break
-        if len(line) == 0:
-            return
-        self.parsed_lines.append(line)
-        return
+        if len(line) > 0:
+            self.parsed_lines.append(line)
 
     def hasMoreCommands(self):
         """
         Checks if there are any more lines to parse
         :return: True if there are and false if no more lines
         """
-        if self.line >= len(self.parsed_lines):
-            return False
-        return True
+        return self.cur_line < len(self.parsed_lines)
 
     def advance(self):
         """
         Advances the line count in order to access the next parsed line in the file
         """
-        self.line += 1
+        self.cur_line += 1
 
     def commandType(self):
-        line = self.parsed_lines[self.line]
-        for opp in gc.opp:
-            if opp in line:
-                return "C_ARITHMETIC"
-        for cmd in gc.cmd:
+        line = self.parsed_lines[self.cur_line]
+        for op in gc.MATH_CMD:
+            if op in line:
+                return gc.C_ARITHMETIC
+        for cmd in gc.STACK_CMD:
             if cmd in line:
-                if cmd == gc.cmd[0]:
-                    return "C_PUSH"
-                else:
-                    return "C_POP"
-        return
+                return cmd
 
     def arg1(self):
         """
         Split the current line and returns the relevant arg
         :return: cmd
         """
-        line = self.parsed_lines[self.line]
-        for cmd in gc.cmd:
+        line = self.parsed_lines[self.cur_line]
+        for cmd in gc.STACK_CMD:
             if cmd in line:
-                for seg in gc.seg:
+                for seg in gc.SEG:
                     if seg in line:
                         return seg
-        for opp in gc.opp:
-            if opp in line:
-                return opp
-        return
+        for op in gc.MATH_CMD:
+            if op in line:
+                return op
 
     def arg2(self):
         """
         Split the current line and returns the relevant arg
         :return: int
         """
-        line = self.parsed_lines[self.line]
-        for cmd in gc.cmd:
-            if cmd in line:
-                for seg in gc.seg:
-                    if seg in line:
-                        command_int = re.findall("\d+", line)[0]
-                        return command_int
-        return
+        line = self.parsed_lines[self.cur_line]
+        return re.findall(r'\d+', line)[0]

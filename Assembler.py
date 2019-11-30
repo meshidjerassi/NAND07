@@ -1,27 +1,20 @@
-import re
 from sys import argv
 import ParserClass as ps
-import global_consts as gc
 import CodeWriter as cw
 
 
-def assembler(path):
-    parser = ps.ParserClass(path)
-    codeWriter = cw.CodeWriter(path)
-    for line in parser.parsed_lines:
-        for cmd in gc.cmd:
-            if cmd in line:
-                for seg in gc.seg:
-                    if seg in line:
-                        int = re.findall("\d+", line)[0]
-                        codeWriter.writePushPop(cmd, seg, int)
-        for opp in gc.opp:
-            if opp in line:
-                codeWriter.writeArithmetic(opp)
-
-
 def main(argv):
-    assembler(argv[1])
+    parser = ps.ParserClass(argv[1])
+    code_writer = cw.CodeWriter(argv[1])
+    while parser.hasMoreCommands():
+        cmd = parser.commandType()
+        if cmd == "C_PUSH":
+            code_writer.writePushPop("push", parser.arg1(), parser.arg2())
+        if cmd == "C_POP":
+            code_writer.writePushPop("pop", parser.arg1(), parser.arg2())
+        if cmd == "C_ARITHMETIC":
+            code_writer.writeArithmetic(parser.arg1)
+        parser.advance()
 
 
 if __name__ == "__main__":

@@ -6,6 +6,6 @@
 
 
 all:
-	chmod a+x VMTranslator
-	chmod a+x VMTranslator.py
+	chmod a+x VMtranslator
+	chmod a+x VMtranslator.py
 

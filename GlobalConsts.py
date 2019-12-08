@@ -33,5 +33,5 @@ C_POP = "pop"
 C_ARITHMETIC = "arithmetic"
 STACK_CMD = (C_PUSH, C_POP)
 MATH_CMD = {*BIN_MATH_OPS, *UNI_MATH_OPS, *LOGIC_OPS}
-SEG = {*HEAP, *CONST_RAM, "constant"}
+SEG = {*HEAP, *CONST_RAM, "constant", "static"}
 
